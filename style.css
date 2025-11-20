@@ -1,6 +1,7 @@
-/* ============================
+/* ============================ 
    ESTILO GERAL
 ============================ */
+
 * {
     margin: 0;
     padding: 0;
@@ -14,6 +15,7 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
 }
+
 
 /* ============================
    CABEÇALHO COM LOGO EM CÍRCULO
@@ -29,7 +31,7 @@ header {
 }
 
 /* LOGO EM CÍRCULO */
-.logo-container {
+logo-container {
     width: 90px;
     height: 90px;
     border-radius: 50%;
@@ -48,12 +50,13 @@ header {
     object-fit: cover;
 }
 
-/* Cabeçalho título */
+/* Título do cabeçalho */
 header h1 {
     font-size: 2.3rem;
     font-weight: 700;
     letter-spacing: 1px;
 }
+
 
 /* ============================
    MENU DE NAVEGAÇÃO
@@ -84,7 +87,6 @@ nav a:hover {
     transform: translateY(-3px);
 }
 
-/
 
 /* ============================
    SEÇÕES
@@ -101,8 +103,9 @@ section {
     to { opacity: 1; transform: translateY(0); }
 }
 
+
 /* ============================
-   GRID DE PRODUTOS / SERVIÇOS
+   GRID
 ============================ */
 .grid {
     display: grid;
@@ -110,26 +113,49 @@ section {
     gap: 25px;
 }
 
+
 /* ============================
-   CARTÕES
+   CARTÕES (COM IMAGEM NO TOPO)
 ============================ */
+
 .card {
     background: #fff;
-    padding: 25px;
+    padding: 0;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
     text-align: center;
     transition: 0.3s ease;
-    position: relative;
     overflow: hidden;
+    position: relative;
 }
 
+/* Imagem no topo — NÃO muito grande */
+.card img {
+    width: 100%;
+    height: 140px;        /* Controla a altura */
+    object-fit: cover;    /* Enquadramento sem distorcer */
+    display: block;
+}
+
+/* Conteúdo do card */
+.card h3 {
+    font-size: 1.4rem;
+    margin-top: 15px;
+    color: #222;
+}
+
+.card p {
+    padding: 10px 20px 20px;
+    color: #555;
+}
+
+/* Hover avançado */
 .card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 26px rgba(0,0,0,0.2);
 }
 
-/* ANIMAÇÃO DE BRILHO NO HOVER */
+/* Efeito de brilho */
 .card::after {
     content: "";
     position: absolute;
@@ -145,9 +171,11 @@ section {
     top: 100%;
 }
 
+
 /* ============================
    BOTÕES PADRÃO
 ============================ */
+
 button,
 .botao {
     display: inline-block;
@@ -161,19 +189,18 @@ button,
     transition: 0.3s;
 }
 
-/* Azul padrão */
 button {
     background: #1a73e8;
     color: white;
 }
+
 button:hover {
     background: #155bb2;
     transform: scale(1.05);
 }
 
-/* ============================
-   BOTÕES DE REDES SOCIAIS
-============================ */
+
+/* Redes sociais */
 .whatsapp {
     background-color: #25D366;
     color: #fff;
@@ -192,9 +219,11 @@ button:hover {
     transform: scale(1.08);
 }
 
+
 /* ============================
    FORMULÁRIOS
 ============================ */
+
 input, textarea, select {
     width: 100%;
     padding: 12px;
@@ -210,9 +239,12 @@ input:focus, textarea:focus {
     border-color: #1a73e8;
     box-shadow: 0 0 8px rgba(26,115,232,0.3);
 }
+
+
 /* ============================
    RODAPÉ
 ============================ */
+
 footer {
     background: #000;
     color: #aaa;
@@ -221,3 +253,4 @@ footer {
     margin-top: 50px;
     border-top: 2px solid #00aaff;
 }
+
