@@ -1,4 +1,4 @@
-/* ============================ 
+/* ============================  
    ESTILO GERAL
 ============================ */
 
@@ -16,7 +16,6 @@ body {
     overflow-x: hidden;
 }
 
-
 /* ============================
    CABEÇALHO COM LOGO EM CÍRCULO
 ============================ */
@@ -30,8 +29,8 @@ header {
     box-shadow: 0 4px 14px rgba(0,0,0,0.2);
 }
 
-/* LOGO EM CÍRCULO */
-logo-container {
+/* LOGO EM CÍRCULO — (CORRIGIDO) */
+.logo-container {
     width: 90px;
     height: 90px;
     border-radius: 50%;
@@ -56,7 +55,6 @@ header h1 {
     font-weight: 700;
     letter-spacing: 1px;
 }
-
 
 /* ============================
    MENU DE NAVEGAÇÃO
@@ -87,7 +85,6 @@ nav a:hover {
     transform: translateY(-3px);
 }
 
-
 /* ============================
    SEÇÕES
 ============================ */
@@ -103,7 +100,6 @@ section {
     to { opacity: 1; transform: translateY(0); }
 }
 
-
 /* ============================
    GRID
 ============================ */
@@ -113,11 +109,9 @@ section {
     gap: 25px;
 }
 
-
 /* ============================
    CARTÕES (COM IMAGEM NO TOPO)
 ============================ */
-
 .card {
     background: #fff;
     padding: 0;
@@ -129,15 +123,13 @@ section {
     position: relative;
 }
 
-/* Imagem no topo — NÃO muito grande */
 .card img {
     width: 100%;
-    height: 140px;        /* Controla a altura */
-    object-fit: cover;    /* Enquadramento sem distorcer */
+    height: 140px;
+    object-fit: cover;
     display: block;
 }
 
-/* Conteúdo do card */
 .card h3 {
     font-size: 1.4rem;
     margin-top: 15px;
@@ -149,7 +141,6 @@ section {
     color: #555;
 }
 
-/* Hover avançado */
 .card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 26px rgba(0,0,0,0.2);
@@ -171,11 +162,9 @@ section {
     top: 100%;
 }
 
-
 /* ============================
    BOTÕES PADRÃO
 ============================ */
-
 button,
 .botao {
     display: inline-block;
@@ -199,8 +188,6 @@ button:hover {
     transform: scale(1.05);
 }
 
-
-/* Redes sociais */
 .whatsapp {
     background-color: #25D366;
     color: #fff;
@@ -219,11 +206,9 @@ button:hover {
     transform: scale(1.08);
 }
 
-
 /* ============================
    FORMULÁRIOS
 ============================ */
-
 input, textarea, select {
     width: 100%;
     padding: 12px;
@@ -238,13 +223,11 @@ input, textarea, select {
 input:focus, textarea:focus {
     border-color: #1a73e8;
     box-shadow: 0 0 8px rgba(26,115,232,0.3);
-}
-
+} 
 
 /* ============================
    RODAPÉ
 ============================ */
-
 footer {
     background: #000;
     color: #aaa;
@@ -253,4 +236,6 @@ footer {
     margin-top: 50px;
     border-top: 2px solid #00aaff;
 }
+
+
 
