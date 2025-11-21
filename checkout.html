@@ -44,7 +44,6 @@
 
     .note{ font-size:13px; color:#666; margin-top:8px; }
 
-    /* ✔️ NOVO ESTILO PARA O CAMPO S/N */
     .sn-box {
       margin-top: 4px;
       display: flex;
@@ -97,7 +96,6 @@
         <label>Número</label>
         <input type="text" id="numero" name="numero" placeholder="123" required>
 
-        <!-- ✔️ CAMPO NOVO S/N BONITO E ALINHADO -->
         <div class="sn-box">
           <input type="checkbox" id="snCheck" style="width:18px; height:18px; cursor:pointer;">
           <label for="snCheck" style="margin:0; cursor:pointer;">Sem Número (S/N)</label>
@@ -107,14 +105,15 @@
         <input type="text" id="bairro" name="bairro" placeholder="Digite o bairro">
 
         <label>Cidade</label>
-        <input type="text" id="cidade" name="cidade" readonly>
+        <!-- ✔️ AGORA É LIVRE PARA DIGITAR -->
+        <input type="text" id="cidade" name="cidade" placeholder="Digite a cidade">
 
         <div class="note">
           Apenas entregamos para CEPs específicos. Se o CEP não for aceito, o checkout é bloqueado.
         </div>
 
         <button id="btnEnviar" class="primary" type="button" disabled>
-          Enviar pedido (WhatsApp + Email)
+          Enviar pedido 
         </button>
       </form>
 
@@ -124,7 +123,6 @@
 
   <script src="checkout.js"></script>
 
-  <!-- ✔ Script para funcionamento do campo S/N -->
   <script>
     const sn = document.getElementById("snCheck");
     const num = document.getElementById("numero");
