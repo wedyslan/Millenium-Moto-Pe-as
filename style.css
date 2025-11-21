@@ -172,7 +172,9 @@ section {
 ============================ */
 button,
 .botao {
-    display: inline-block;
+    display: inline-flex; /* Alterado para flexbox para alinhar ícone/texto */
+    align-items: center; /* Centraliza verticalmente o conteúdo (ícone e texto) */
+    justify-content: center; /* Centraliza horizontalmente (opcional) */
     padding: 12px 25px;
     border: none;
     border-radius: 8px;
@@ -181,6 +183,12 @@ button,
     margin: 10px;
     font-weight: 600;
     transition: 0.3s;
+}
+
+/* Estilo para os ícones dentro dos botões para dar um pequeno espaçamento */
+.botao i {
+    margin-right: 8px;
+    font-size: 1.1rem; /* Pode ajustar o tamanho do ícone aqui */
 }
 
 button {
