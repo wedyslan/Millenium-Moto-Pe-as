@@ -1,30 +1,45 @@
-document.addEventListener("DOMContentLoaded", () => { 
+document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("formAgendamento");
 
-    if (form) {
+    if (!form) return;
 
-        form.addEventListener("submit", function(e) {
-            e.preventDefault();
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-            const nome = form.querySelector("input[name='nome']").value;
-            const servico = form.querySelector("select[name='servico']").value;
-            const data = form.querySelector("input[name='data']").value;
-            const obs = form.querySelector("textarea[name='obs']").value;
+        // Captura os valores preenchidos pelo usuário
+        const nome = form.querySelector("input[name='nome']").value.trim();
+        const servico = form.querySelector("select[name='servico']").value.trim();
+        const data = form.querySelector("input[name='data']").value.trim();
+        const obs = form.querySelector("textarea[name='obs']").value.trim();
 
-            // Número de destino (Millenium Moto Peças)
-            const telefone = "558296116499";
+        // Validação simples
+        if (!nome || !data) {
+            alert("Por favor, preencha Nome e Data.");
+            return;
+        }
 
-            const mensagem =
-                `Olá! Gostaria de fazer um agendamento.%0A%0A` +
-                `*Nome:* ${nome}%0A` +
-                `*Serviço:* ${servico}%0A` +
-                `*Data:* ${data}%0A` +
-                `*Observações:* ${obs}`;
+        // Número de WhatsApp da empresa (formato internacional)
+        const telefone = "558296116499";
 
-            const url = `https://wa.me/${telefone}?text=${mensagem}`;
+        // Montagem da mensagem FINAL que será enviada
+        const mensagem = 
+`Olá! Gostaria de fazer um agendamento.
 
-            window.open(url, "_blank");
-        });
+*Nome:* ${nome}
+*Serviço:* ${servico}
+*Data:* ${data}
+*Observações:* ${obs || "-"}
 
-    }
+Aguardo confirmação. Obrigado!`;
+
+        // Codificação correta para URL
+        const mensagemCodificada = encodeURIComponent(mensagem);
+
+        // Link final para abrir o WhatsApp
+        const url = `https://wa.me/${telefone}?text=${mensagemCodificada}`;
+
+        // Abre o WhatsApp (compatível com celulares)
+        window.location.href = url;
+    });
 });
+
