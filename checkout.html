@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Checkout - Millenium</title>
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Estilo minimalista / mobile-first */
+    body { font-family: Inter, system-ui, Arial; margin:0; background:#f6f7f9; color:#111;}
+    .wrap { max-width:720px; margin:18px auto; padding:18px; }
+    .card { background:#fff; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(2,6,23,0.06); }
+    h1{font-size:18px; margin:0 0 12px}
+    label{display:block; font-size:13px; margin-top:10px}
+    input[type="text"], input[type="tel"], input[type="number"] {
+      width:100%; padding:12px; border-radius:10px; border:1px solid #e6e9ee; margin-top:6px;
+      font-size:15px;
+    }
+    .row{display:flex; gap:8px}
+    .row .col{flex:1}
+    .summary{margin-top:12px; padding:10px; background:#fbfbfd; border-radius:10px; font-weight:600}
+    .total{font-size:18px; margin-top:8px}
+    .primary { width:100%; background:#0b9b4a; color:#fff; border:none; padding:12px; border-radius:10px; font-weight:700; margin-top:12px; cursor:pointer; font-size:16px;}
+    .secondary{ background:transparent; border:1px solid #ddd; padding:10px; border-radius:10px; cursor:pointer;}
+    .note{font-size:13px; color:#666; margin-top:8px;}
+    @media(min-width:720px){ .wrap{ padding:28px } }
+  </style>
+
+  <!-- EmailJS (substitua as credenciais no checkout.js) -->
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Finalizar pedido</h1>
+
+      <!-- RESUMO DO PRODUTO (preenchido pelo checkout.js) -->
+      <div id="produtoResumo" class="summary">
+        Produto: <span id="resNome">—</span><br>
+        Preço: R$ <span id="resPreco">0.00</span><br>
+        Frete: R$ <span id="resFrete">0.00</span>
+        <div class="total">Total: R$ <span id="resTotal">0.00</span></div>
+      </div>
+
+      <!-- FORMULÁRIO -->
+      <form id="checkoutForm" class="mt">
+        <label>Nome completo</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+
+        <label>Telefone (whatsapp)</label>
+        <input type="tel" id="telefone" name="telefone" placeholder="(00) 0 0000-0000" required>
+
+        <label>CEP</label>
+        <div class="row">
+          <div class="col"><input type="text" id="cep" name="cep" placeholder="00000-000" required></div>
+          <div class="col"><button type="button" id="btnBuscaCep" class="secondary">Buscar</button></div>
+        </div>
+
+        <label>Rua / Logradouro</label>
+        <input type="text" id="rua" name="rua" readonly>
+
+        <label>Número</label>
+        <input type="text" id="numero" name="numero" placeholder="123" required>
+
+        <label>Bairro</label>
+        <input type="text" id="bairro" name="bairro" readonly>
+
+        <label>Cidade</label>
+        <input type="text" id="cidade" name="cidade" readonly>
+
+        <div class="note">Apenas entregamos para CEPs específicos. Se o CEP não for aceito, não será possível finalizar.</div>
+
+        <button id="btnEnviar" class="primary" type="button" disabled>Enviar pedido (WhatsApp + Email)</button>
+      </form>
+
+      <div id="msg" class="note" style="display:none;margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <script src="checkout.js"></script>
+</body>
+</html>
