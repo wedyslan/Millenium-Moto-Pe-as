@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* Estilo minimalista / mobile-first */
     body { 
       font-family: Inter, system-ui, Arial; 
       margin:0; 
@@ -16,105 +15,47 @@
       color:#111;
     }
 
-    .wrap { 
-      max-width:720px; 
-      margin:18px auto; 
-      padding:18px; 
+    .wrap { max-width:720px; margin:18px auto; padding:18px; }
+    .card { background:#fff; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(2,6,23,0.06); }
+
+    h1{ font-size:18px; margin:0 0 12px; }
+
+    label{ display:block; font-size:13px; margin-top:10px; }
+
+    input[type="text"], input[type="tel"], input[type="number"] {
+      width:100%; padding:12px; border-radius:10px;
+      border:1px solid #e6e9ee; margin-top:6px; font-size:15px;
     }
 
-    .card { 
-      background:#fff; 
-      border-radius:14px; 
-      padding:16px; 
-      box-shadow:0 8px 24px rgba(2,6,23,0.06); 
+    .row{ display:flex; gap:8px; }
+    .row .col{ flex:1; }
+
+    .summary{ margin-top:12px; padding:10px; background:#fbfbfd; border-radius:10px; font-weight:600; }
+    .total{ font-size:18px; margin-top:8px; }
+
+    .primary { width:100%; background:#0b9b4a; color:#fff; border:none;
+      padding:12px; border-radius:10px; font-weight:700; margin-top:12px; cursor:pointer; font-size:16px;
     }
 
-    h1{ 
-      font-size:18px; 
-      margin:0 0 12px; 
-    }
-
-    label{ 
-      display:block; 
-      font-size:13px; 
-      margin-top:10px; 
-    }
-
-    input[type="text"], 
-    input[type="tel"], 
-    input[type="number"] {
-      width:100%; 
-      padding:12px; 
-      border-radius:10px; 
-      border:1px solid #e6e9ee; 
-      margin-top:6px;
-      font-size:15px;
-    }
-
-    .row{ 
-      display:flex; 
-      gap:8px;
-    }
-
-    .row .col{
-      flex:1;
-    }
-
-    .summary{
-      margin-top:12px; 
-      padding:10px; 
-      background:#fbfbfd; 
-      border-radius:10px; 
-      font-weight:600;
-    }
-
-    .total{
-      font-size:18px; 
-      margin-top:8px;
-    }
-
-    .primary { 
-      width:100%; 
-      background:#0b9b4a; 
-      color:#fff; 
-      border:none; 
-      padding:12px; 
-      border-radius:10px; 
-      font-weight:700; 
-      margin-top:12px; 
-      cursor:pointer; 
-      font-size:16px;
-    }
-
-    /* >>> BOTÃO BUSCAR CEP – MAIS NÍTIDO <<< */
     .secondary{
-      background:#0b9b4a;
-      border:none;
-      color:#fff;
-      font-weight:600;
-      padding:12px;
-      border-radius:10px;
-      cursor:pointer;
-      transition:0.2s;
-      font-size:14px;
+      background:#0b9b4a; border:none; color:#fff; font-weight:600;
+      padding:12px; border-radius:10px; cursor:pointer; transition:0.2s; font-size:14px;
     }
 
-    .secondary:hover{
-      background:#087c3c;
+    .note{ font-size:13px; color:#666; margin-top:8px; }
+
+    /* ✔️ NOVO ESTILO PARA O CAMPO S/N */
+    .sn-box {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 2px;
     }
 
-    .note{
-      font-size:13px; 
-      color:#666; 
-      margin-top:8px;
-    }
-
-    @media(min-width:720px){ 
-      .wrap{ padding:28px } 
-    }
+    @media(min-width:720px){ .wrap{ padding:28px } }
   </style>
 
-  <!-- EmailJS -->
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 </head>
 
@@ -123,7 +64,6 @@
     <div class="card">
       <h1>Finalizar pedido</h1>
 
-      <!-- RESUMO DO PRODUTO (checkout.js preenche automaticamente) -->
       <div id="produtoResumo" class="summary">
         Produto: <span id="resNome">—</span><br>
         Preço: R$ <span id="resPreco">0.00</span><br>
@@ -131,7 +71,6 @@
         <div class="total">Total: R$ <span id="resTotal">0.00</span></div>
       </div>
 
-      <!-- FORMULÁRIO -->
       <form id="checkoutForm" class="mt">
 
         <label>Nome completo</label>
@@ -148,20 +87,24 @@
           </div>
 
           <div class="col">
-            <button type="button" id="btnBuscaCep" class="secondary">
-              Buscar CEP
-            </button>
+            <button type="button" id="btnBuscaCep" class="secondary">Buscar CEP</button>
           </div>
         </div>
 
         <label>Rua / Logradouro</label>
-        <input type="text" id="rua" name="rua" readonly>
+        <input type="text" id="rua" name="rua" placeholder="Digite a rua">
 
         <label>Número</label>
         <input type="text" id="numero" name="numero" placeholder="123" required>
 
+        <!-- ✔️ CAMPO NOVO S/N BONITO E ALINHADO -->
+        <div class="sn-box">
+          <input type="checkbox" id="snCheck" style="width:18px; height:18px; cursor:pointer;">
+          <label for="snCheck" style="margin:0; cursor:pointer;">Sem Número (S/N)</label>
+        </div>
+
         <label>Bairro</label>
-        <input type="text" id="bairro" name="bairro" readonly>
+        <input type="text" id="bairro" name="bairro" placeholder="Digite o bairro">
 
         <label>Cidade</label>
         <input type="text" id="cidade" name="cidade" readonly>
@@ -180,5 +123,22 @@
   </div>
 
   <script src="checkout.js"></script>
+
+  <!-- ✔ Script para funcionamento do campo S/N -->
+  <script>
+    const sn = document.getElementById("snCheck");
+    const num = document.getElementById("numero");
+
+    sn.addEventListener("change", () => {
+      if (sn.checked) {
+        num.value = "S/N";
+        num.disabled = true;
+      } else {
+        num.value = "";
+        num.disabled = false;
+      }
+    });
+  </script>
+
 </body>
 </html>
