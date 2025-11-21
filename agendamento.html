@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>  
 <html lang="pt-BR">
 
 <head>
@@ -50,14 +50,67 @@
     <div id="mensagem-sucesso" class="sucesso" style="display:none;">
         Agendamento enviado com sucesso!
     </div>
-
   </main>
 
   <footer><p>© 2025 Millenium</p></footer>
 
-  <script src="script.js"></script>
-</body> 
+  
+<!-- SCRIPT FUNCIONAL -->
+<script>
+document.addEventListener("DOMContentLoaded", () => { 
+    const form = document.getElementById("formAgendamento");
+    const mensagemSucesso = document.getElementById("mensagem-sucesso");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const nome = form.querySelector("input[name='nome']").value.trim();
+        const servico = form.querySelector("select[name='servico']").value.trim();
+        const data = form.querySelector("input[name='data']").value.trim();
+        const obs = form.querySelector("textarea[name='obs']").value.trim();
+
+        // SEU NÚMERO CONFIRMADO
+        const telefone = "5582996116499";
+
+        if (!nome || !data) {
+            alert("Por favor, preencha seu Nome e a Data.");
+            return;
+        }
+
+        const mensagem =
+`Olá! Gostaria de fazer um agendamento:
+
+*Nome:* ${nome}
+*Serviço:* ${servico}
+*Data:* ${data}
+*Observações:* ${obs || "-"}
+
+Aguardo confirmação. Obrigado!`;
+
+        const mensagemCodificada = encodeURIComponent(mensagem);
+        const url = "https://wa.me/" + telefone + "?text=" + mensagemCodificada;
+
+        // Abre WhatsApp
+        window.open(url, "_blank");
+
+        // Mostra mensagem de sucesso
+        mensagemSucesso.style.display = "block";
+
+        // Esconde depois de 4 segundos
+        setTimeout(() => {
+            mensagemSucesso.style.display = "none";
+        }, 4000);
+
+        // Limpa o formulário
+        form.reset();
+    });
+});
+</script>
+
+</body>  
 </html>
+
+
 
 
 
