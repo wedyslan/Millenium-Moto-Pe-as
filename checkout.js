@@ -12,8 +12,8 @@ const FRETES_POR_CEP = {
   "57275000": 5.00,
   "57270000": 8.00,
   "57301100": 15.00,
-  "57275971": 0.00,
-  "57279000": 0.00
+  "57275971": gratis,
+  "57279000": gratis
 };
 
 /* EmailJS - substitua pelos seus IDs (não funciona até configurar no emailjs.com) */
@@ -204,3 +204,4 @@ function handleEnviarPedido() {
   // opcional: limpar campos ou redirecionar
   // document.getElementById("checkoutForm").reset();
 }
+
