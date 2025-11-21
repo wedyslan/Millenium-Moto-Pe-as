@@ -5,22 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Produtos - Millenium Moto Peças</title>
     <link rel="stylesheet" href="style.css">
+
     <style>
-      /* ajustes rápidos para manter visual limpo no exemplo */
+      /* Layout dos cards */
       .grid { display:grid; grid-template-columns:repeat(1,1fr); gap:12px; }
       @media(min-width:700px){ .grid { grid-template-columns:repeat(3,1fr);} }
-      .card { background:#fff; padding:12px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
-      .card h3{ font-size:16px; margin-bottom:8px; }
-      .card p{ margin-bottom:12px; font-weight:600; }
-      .buy-btn { background:#0b9b4a; color:#fff; border:none; padding:10px 12px; border-radius:8px; cursor:pointer; width:100%;}
-      header { display:flex; align-items:center; gap:12px; padding:14px;}
-      header img{ width:56px; height:56px; object-fit:cover; border-radius:10px;}
+
+      .card {
+        background:#fff;
+        padding:12px;
+        border-radius:10px;
+        box-shadow:0 6px 18px rgba(0,0,0,0.06);
+        text-align:center;
+      }
+
+      .card img {
+        width:100%;
+        height:160px;
+        object-fit:cover;
+        border-radius:10px;
+        margin-bottom:10px;
+      }
+
+      .card h3{
+        font-size:16px;
+        margin-bottom:8px;
+      }
+
+      .card p{
+        margin-bottom:12px;
+        font-weight:600;
+        font-size:15px;
+      }
+
+      .buy-btn {
+        background:#0b9b4a;
+        color:#fff;
+        border:none;
+        padding:10px 12px;
+        border-radius:8px;
+        cursor:pointer;
+        width:100%;
+        font-size:15px;
+        transition:0.2s;
+      }
+
+      .buy-btn:hover { background:#087c3c; }
+
+      header {
+        display:flex;
+        align-items:center;
+        gap:12px;
+        padding:14px;
+      }
+
+      header img{
+        width:56px;
+        height:56px;
+        object-fit:cover;
+        border-radius:10px;
+      }
     </style>
 </head>
 <body>
 
 <header>
-    <!-- USANDO O ARQUIVO QUE VOCÊ ENVIOU localmente -->
     <div class="logo-container">
         <img src="Logo.jpeg" alt="Logo da Oficina">
     </div>
@@ -38,61 +87,72 @@
     <h2>Produtos Disponíveis</h2>
     <br>
 
-    <!-- GRID DE PRODUTOS: cada card tem data-product e data-price -->
+    <!-- GRID DE PRODUTOS COM IMAGENS -->
     <div class="grid">
+
         <div class="card" data-product="Kit Transmissão Riffel Cg 160" data-price="135.00">
+            <img src="imagens/produto1.jpg" alt="Kit Transmissão Riffel Cg 160">
             <h3>Kit Transmissão Riffel Cg 160</h3>
             <p>R$ 135,00</p>
             <button class="buy-btn">Comprar</button>
         </div>
 
         <div class="card" data-product="Bloco do Farol cg 160 2017 a 2024" data-price="80.00">
+            <img src="imagens/produto2.jpg" alt="Bloco do Farol cg 160 2017 a 2024">
             <h3>Bloco do Farol cg 160 2017 a 2024</h3>
             <p>R$ 80,00</p>
             <button class="buy-btn">Comprar</button>
         </div>
 
         <div class="card" data-product="Lampada do Farol Traseiro Biz 125 2008" data-price="8.00">
+            <img src="imagens/produto3.jpg" alt="Lâmpada do Farol Traseiro Biz 125 2008">
             <h3>Lâmpada do Farol Traseiro Biz 125 2008</h3>
             <p>R$ 8,00</p>
             <button class="buy-btn">Comprar</button>
         </div>
 
         <div class="card" data-product="Kit Transmissão Riffel Cg 125/150" data-price="125.00">
+            <img src="imagens/produto4.jpg" alt="Kit Transmissão Riffel Cg 125/150">
             <h3>Kit Transmissão Riffel Cg 125/150</h3>
             <p>R$ 125,00</p>
             <button class="buy-btn">Comprar</button>
         </div>
 
         <div class="card" data-product="Manete cromado cg160" data-price="39.99">
+            <img src="imagens/produto5.jpg" alt="Manete cromado cg160">
             <h3>Manete cromado cg160</h3>
             <p>R$ 39,99</p>
             <button class="buy-btn">Comprar</button>
         </div>
 
         <div class="card" data-product="Óleo Mobil Semi-sintético" data-price="45.00">
+            <img src="imagens/produto6.jpg" alt="Óleo Mobil Semi-sintético">
             <h3>Óleo Mobil Semi-sintético</h3>
             <p>R$ 45,00</p>
             <button class="buy-btn">Comprar</button>
         </div>
 
         <div class="card" data-product="Pastilhas de freio cg 160 2022" data-price="25.00">
+            <img src="imagens/produto7.jpg" alt="Pastilhas de freio cg 160 2022">
             <h3>Pastilhas de freio cg 160 2022</h3>
             <p>R$ 25,00</p>
             <button class="buy-btn">Comprar</button>
         </div>
 
         <div class="card" data-product="Frente completa cg 160 2022 a 2024" data-price="240.00">
+            <img src="imagens/produto8.jpg" alt="Frente completa cg 160 2022 a 2024">
             <h3>Frente completa cg 160 2022 a 2024</h3>
             <p>R$ 240,00</p>
             <button class="buy-btn">Comprar</button>
         </div>
 
         <div class="card" data-product="Lampada do Farol frontal Biz 125 2008 a 2014" data-price="15.00">
+            <img src="imagens/produto9.jpg" alt="Lâmpada do Farol frontal Biz 125 2008 a 2014">
             <h3>Lâmpada do Farol frontal Biz 125 2008 a 2014</h3>
             <p>R$ 15,00</p>
             <button class="buy-btn">Comprar</button>
         </div>
+
     </div>
 </section>
 
@@ -101,7 +161,7 @@
 </footer>
 
 <script>
-/* Script simples: ao clicar em Comprar, vai para checkout.html com params (product e price) */
+/* Redirecionamento para checkout com params */
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".card .buy-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
@@ -109,7 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const product = card.getAttribute("data-product");
             const price = card.getAttribute("data-price");
             const params = new URLSearchParams({ product, price });
-            // abre checkout.html em nova aba (ou mesma aba se preferir)
             window.location.href = `checkout.html?${params.toString()}`;
         });
     });
