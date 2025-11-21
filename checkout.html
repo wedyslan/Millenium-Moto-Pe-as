@@ -1,139 +1,83 @@
-/* CONFIGURAÇÃO DOS CEPS PERMITIDOS */
-const fretes = {
-    "57275000": 5,
-    "57270000": 8,
-    "57301100": 15,
-    "57275971": 0,
-    "57279000": 0
-};
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Checkout - Millenium</title>
 
-document.addEventListener("DOMContentLoaded", () => {
-    const btnBuscaCep = document.getElementById("btnBuscaCep");
-    const btnEnviar = document.getElementById("btnEnviar");
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Estilo minimalista / mobile-first */
+    body { font-family: Inter, system-ui, Arial; margin:0; background:#f6f7f9; color:#111;}
+    .wrap { max-width:720px; margin:18px auto; padding:18px; }
+    .card { background:#fff; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(2,6,23,0.06); }
+    h1{font-size:18px; margin:0 0 12px}
+    label{display:block; font-size:13px; margin-top:10px}
+    input[type="text"], input[type="tel"], input[type="number"] {
+      width:100%; padding:12px; border-radius:10px; border:1px solid #e6e9ee; margin-top:6px;
+      font-size:15px;
+    }
+    .row{display:flex; gap:8px}
+    .row .col{flex:1}
+    .summary{margin-top:12px; padding:10px; background:#fbfbfd; border-radius:10px; font-weight:600}
+    .total{font-size:18px; margin-top:8px}
+    .primary { width:100%; background:#0b9b4a; color:#fff; border:none; padding:12px; border-radius:10px; font-weight:700; margin-top:12px; cursor:pointer; font-size:16px;}
+    .secondary{ background:transparent; border:1px solid #ddd; padding:10px; border-radius:10px; cursor:pointer;}
+    .note{font-size:13px; color:#666; margin-top:8px;}
+    @media(min-width:720px){ .wrap{ padding:28px } }
+  </style>
 
-    const resNome = document.getElementById("resNome");
-    const resPreco = document.getElementById("resPreco");
-    const resFrete = document.getElementById("resFrete");
-    const resTotal = document.getElementById("resTotal");
+  <!-- EmailJS (substitua as credenciais no checkout.js) -->
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Finalizar pedido</h1>
 
-    // Carregar dados do produto vindo de produtos.html
-    const params = new URLSearchParams(window.location.search);
-    const nomeProd = params.get("product");
-    const precoProd = parseFloat(params.get("price"));
+      <!-- RESUMO DO PRODUTO (preenchido pelo checkout.js) -->
+      <div id="produtoResumo" class="summary">
+        Produto: <span id="resNome">—</span><br>
+        Preço: R$ <span id="resPreco">0.00</span><br>
+        Frete: R$ <span id="resFrete">0.00</span>
+        <div class="total">Total: R$ <span id="resTotal">0.00</span></div>
+      </div>
 
-    resNome.textContent = nomeProd;
-    resPreco.textContent = precoProd.toFixed(2);
+      <!-- FORMULÁRIO -->
+      <form id="checkoutForm" class="mt">
+        <label>Nome completo</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
 
-    /* BUSCAR CEP via ViaCEP */
-    btnBuscaCep.addEventListener("click", async () => {
-        const cep = document.getElementById("cep").value.replace(/\D/g, "");
+        <label>Telefone (whatsapp)</label>
+        <input type="tel" id="telefone" name="telefone" placeholder="(00) 0 0000-0000" required>
 
-        if (cep.length !== 8) {
-            alert("Digite um CEP válido!");
-            return;
-        }
+        <label>CEP</label>
+        <div class="row">
+          <div class="col"><input type="text" id="cep" name="cep" placeholder="00000-000" required></div>
+          <div class="col"><button type="button" id="btnBuscaCep" class="secondary">Buscar</button></div>
+        </div>
 
-        // valida frete
-        if (!fretes[cep]) {
-            alert("Este CEP não está na área de entrega.");
-            btnEnviar.disabled = true;
-            return;
-        }
+        <label>Rua / Logradouro</label>
+        <input type="text" id="rua" name="rua" readonly>
 
-        const url = `https://viacep.com.br/ws/${cep}/json/`;
+        <label>Número</label>
+        <input type="text" id="numero" name="numero" placeholder="123" required>
 
-        try {
-            const r = await fetch(url);
-            const data = await r.json();
+        <label>Bairro</label>
+        <input type="text" id="bairro" name="bairro" readonly>
 
-            if (data.erro) {
-                alert("CEP não encontrado!");
-                return;
-            }
+        <label>Cidade</label>
+        <input type="text" id="cidade" name="cidade" readonly>
 
-            document.getElementById("rua").value = data.logradouro;
-            document.getElementById("bairro").value = data.bairro;
-            document.getElementById("cidade").value = data.localidade;
+        <div class="note">Apenas entregamos para CEPs específicos. Se o CEP não for aceito, não será possível finalizar.</div>
 
-            const frete = fretes[cep];
-            resFrete.textContent = frete.toFixed(2);
-            resTotal.textContent = (frete + precoProd).toFixed(2);
+        <button id="btnEnviar" class="primary" type="button" disabled>Enviar pedido (WhatsApp + Email)</button>
+      </form>
 
-            btnEnviar.disabled = false;
+      <div id="msg" class="note" style="display:none;margin-top:10px;"></div>
+    </div>
+  </div>
 
-        } catch (e) {
-            alert("Erro ao buscar CEP. Tente novamente.");
-        }
-    });
-
-    /* ENVIAR PEDIDO (WHATSAPP + EMAIL) */
-    btnEnviar.addEventListener("click", () => {
-
-        const nome = document.getElementById("nome").value;
-        const telefone = document.getElementById("telefone").value;
-        const cep = document.getElementById("cep").value;
-        const rua = document.getElementById("rua").value;
-        let numero = document.getElementById("numero").value;
-        const bairro = document.getElementById("bairro").value;
-        const cidade = document.getElementById("cidade").value;
-
-        // valida SN no número
-        if (!numero || numero.trim() === "") {
-            alert("Digite o número ou SN.");
-            return;
-        }
-
-        // converter SN automaticamente
-        numero = numero.toUpperCase();
-        if (["SN", "S/N", "S N"].includes(numero.replace(/\s/g, ""))) {
-            numero = "SN";
-        }
-
-        const frete = parseFloat(resFrete.textContent);
-        const total = parseFloat(resTotal.textContent);
-
-        // MENSAGEM
-        const msg =
-`📦 *Novo Pedido - Millenium Moto Peças*
-
-🛒 *Produto:* ${nomeProd}
-💲 *Preço:* R$ ${precoProd.toFixed(2)}
-
-🚚 *Frete:* R$ ${frete.toFixed(2)}
-💰 *Total:* R$ ${total.toFixed(2)}
-
-👤 *Cliente:* ${nome}
-📱 *Telefone:* ${telefone}
-
-📍 *Endereço:*  
-${rua}, ${numero} - ${bairro}  
-CEP: ${cep} - ${cidade}
-
-Agradecemos pela preferência!`;
-
-        /* WHATSAPP */
-        const numeroWhats = "5582996006394"; // SEU NÚMERO
-        const urlWpp = `https://wa.me/${numeroWhats}?text=${encodeURIComponent(msg)}`;
-        window.open(urlWpp, "_blank");
-
-        /* EMAILJS */
-        emailjs.init("service_default");  
-
-        emailjs.send("service_default", "template_default", {
-            produto: nomeProd,
-            preco: precoProd.toFixed(2),
-            frete: frete.toFixed(2),
-            total: total.toFixed(2),
-            nome: nome,
-            telefone: telefone,
-            rua: rua,
-            numero: numero,
-            bairro: bairro,
-            cidade: cidade,
-            cep: cep,
-            emailDestino: "wedyslanoliveira123@gmail.com"
-        });
-
-        alert("Pedido enviado com sucesso!");
-    });
-});
+  <script src="checkout.js"></script>
+</body>
+</html>
