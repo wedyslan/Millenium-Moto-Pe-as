@@ -65,6 +65,85 @@
         object-fit:cover;
         border-radius:10px;
       }
+
+      /* ---------------------------------------------------- */
+      /* CSS NOVO: Layout do Filtro de Pesquisa (Flexbox) */
+      /* ---------------------------------------------------- */
+
+      .filter-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 15px;
+          padding: 20px;
+          background-color: #f8f8f8;
+          border-radius: 8px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          align-items: flex-end; /* Alinha os itens na parte inferior */
+          margin: 0 14px 20px 14px; /* Adiciona margens para não colar nas laterais */
+      }
+
+      .filter-item {
+          display: flex;
+          flex-direction: column;
+          min-width: 200px;
+          flex-grow: 1;
+      }
+
+      .filter-label {
+          font-weight: bold;
+          margin-bottom: 5px;
+          color: #333;
+          font-size: 0.9em;
+      }
+
+      .filter-item input[type="text"],
+      .filter-item select {
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 1em;
+          transition: border-color 0.3s;
+          height: 40px;
+      }
+
+      .filter-item input[type="text"]:focus,
+      .filter-item select:focus {
+          border-color: #007bff;
+          outline: none;
+      }
+
+      .apply-button {
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 1em;
+          font-weight: bold;
+          height: 40px;
+          transition: background-color 0.3s;
+      }
+
+      .apply-button:hover {
+          background-color: #0056b3;
+      }
+
+      /* Melhoria para a barra de navegação */
+      nav {
+        padding: 10px 14px;
+        background-color: #eee;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        gap: 15px;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+      }
+      /* FIM DO CSS NOVO */
     </style>
 </head>
 <body>
@@ -82,10 +161,7 @@
     <a href="contatos.html">Informações</a>
 </nav>
 
-    <br>
-
-
-<div class="filter-container">
+    <div class="filter-container">
     <div class="filter-item search-item">
         <label for="search-input" class="filter-label">Buscar Peça:</label>
         <input type="text" id="search-input" placeholder="Kit Transmissão, Óleo, Cg 160..." title="Digite o nome da peça que procura">
@@ -104,8 +180,7 @@
 </div>
     
 <section>
-    <br>
-    <h2>Produtos Disponíveis</h2>
+    <h2 style="margin-left: 14px;">Produtos Disponíveis</h2> 
     <br>
 
     <div class="grid" id="product-grid">
@@ -184,6 +259,8 @@
 
 </body>
 </html>
+
+
 
 
 
