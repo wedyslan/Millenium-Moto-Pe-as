@@ -38,8 +38,9 @@
         font-size:15px;
       }
 
+      /* ALTERAÇÃO 1: Botões de compra azuis */
       .buy-btn {
-        background:#0b9b4a;
+        background:#007bff; /* Azul primário (o mesmo do botão Aplicar Filtros) */
         color:#fff;
         border:none;
         padding:10px 12px;
@@ -50,7 +51,10 @@
         transition:0.2s;
       }
 
-      .buy-btn:hover { background:#087c3c; }
+      .buy-btn:hover { 
+        background:#0056b3; /* Azul mais escuro no hover */
+      }
+      /* Fim da ALTERAÇÃO 1 */
 
       header {
         display:flex;
@@ -65,10 +69,6 @@
         object-fit:cover;
         border-radius:10px;
       }
-
-      /* ---------------------------------------------------- */
-      /* CSS NOVO: Layout do Filtro de Pesquisa (Flexbox) */
-      /* ---------------------------------------------------- */
 
       .filter-container {
           display: flex;
@@ -129,21 +129,26 @@
           background-color: #0056b3;
       }
 
-      /* Melhoria para a barra de navegação */
+      /* ALTERAÇÃO 2: Barra de navegação azul escuro */
       nav {
         padding: 10px 14px;
-        background-color: #eee;
-        border-bottom: 1px solid #ccc;
+        background-color: #003366; /* Azul escuro */
+        border-bottom: none; /* Remove a linha de baixo, se a cor já for escura */
         display: flex;
         gap: 15px;
       }
 
       nav a {
         text-decoration: none;
-        color: #333;
+        color: #fff; /* Muda a cor do link para branco para contraste */
         font-weight: 500;
+        transition: color 0.2s;
       }
-      /* FIM DO CSS NOVO */
+
+      nav a:hover {
+        color: #cccccc; /* Cor levemente cinza ao passar o mouse */
+      }
+      /* Fim da ALTERAÇÃO 2 */
     </style>
 </head>
 <body>
@@ -259,6 +264,8 @@
 
 </body>
 </html>
+
+
 
 
 
