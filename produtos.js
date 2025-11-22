@@ -10,20 +10,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const searchText = document.getElementById('search-input').value.toLowerCase();
         // Converte o valor do select para float; 0 significa 'Qualquer Valor'
         const maxPrice = parseFloat(document.getElementById('price-filter').value);
-        const cards = document.querySelectorAll('#product-grid .card');
+        const cards = document.querySelectorAll('#product-grid .card'); // Procura os cards pelo ID corrigido no HTML
 
         cards.forEach(card => {
             const productName = card.getAttribute('data-product').toLowerCase();
-            // O preço é armazenado como string, convertemos para float para comparação numérica.
             const productPrice = parseFloat(card.getAttribute('data-price'));
 
-            // 2. Filtro de Texto: verifica se o nome do produto inclui o texto digitado
+            // 2. Filtro de Texto
             const matchesText = productName.includes(searchText);
 
-            // 3. Filtro de Preço: verifica se o preço está dentro do limite ou se o filtro está desativado (maxPrice === 0)
+            // 3. Filtro de Preço
             const matchesPrice = (maxPrice === 0 || productPrice <= maxPrice);
 
-            // 4. Aplica a visibilidade: o card só é mostrado se AMBAS as condições forem verdadeiras
+            // 4. Aplica a visibilidade
             if (matchesText && matchesPrice) {
                 card.style.display = 'block';
             } else {
@@ -36,17 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById('search-input');
     const priceFilter = document.getElementById('price-filter');
 
-    // Dispara a filtragem a cada digitação no campo de busca
+    // Liga a função de filtro aos inputs
     if (searchInput) {
         searchInput.addEventListener('input', filterProducts);
     }
-    // Dispara a filtragem ao selecionar nova opção de preço
     if (priceFilter) {
         priceFilter.addEventListener('change', filterProducts);
     }
 
     // ============================
-    // LÓGICA DE COMPRA (Do seu código original)
+    // LÓGICA DE COMPRA (Funcionalidade de redirecionamento)
     // ============================
     document.querySelectorAll(".card .buy-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
@@ -55,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const price = card.getAttribute("data-price");
             const params = new URLSearchParams({ product, price });
             
-            // Redireciona para o checkout com as informações do produto
             window.location.href = `checkout.html?${params.toString()}`;
         });
     });
