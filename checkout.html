@@ -1,48 +1,178 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Millenium Moto Peças</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Checkout - Millenium</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body { 
+      font-family: Inter, system-ui, Arial; 
+      margin:0; 
+      background:#f6f7f9; 
+      color:#111;
+    }
+
+    .wrap { max-width:720px; margin:18px auto; padding:18px; }
+    .card { background:#fff; border-radius:14px; padding:16px; box-shadow:0 8px 24px rgba(2,6,23,0.06); }
+
+    h1{ font-size:18px; margin:0 0 12px; }
+
+    label{ display:block; font-size:13px; margin-top:10px; }
+
+    input[type="text"], input[type="tel"], input[type="number"] {
+      width:100%; padding:12px; border-radius:10px;
+      border:1px solid #e6e9ee; margin-top:6px; font-size:15px;
+    }
+
+    .row{ display:flex; gap:8px; }
+    .row .col{ flex:1; }
+
+    .summary{ margin-top:12px; padding:10px; background:#fbfbfd; border-radius:10px; font-weight:600; }
+    .total{ font-size:18px; margin-top:8px; }
+
+    .primary { width:100%; background:#0b9b4a; color:#fff; border:none;
+      padding:12px; border-radius:10px; font-weight:700; margin-top:12px; cursor:pointer; font-size:16px;
+    }
+
+    .secondary{
+      background:#0b9b4a; border:none; color:#fff; font-weight:600;
+      padding:12px; border-radius:10px; cursor:pointer; transition:0.2s; font-size:14px;
+    }
+
+    .note{ font-size:13px; color:#666; margin-top:8px; }
+
+    .sn-box {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 2px;
+    }
+
+    .hidden { display:none !important; }
+
+    @media(min-width:720px){ .wrap{ padding:28px } }
+  </style>
+
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 </head>
 
 <body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Finalizar pedido</h1>
 
-<h2>Finalizar Pedido</h2>
+      <div id="produtoResumo" class="summary">
+        Produto: <span id="resNome">—</span><br>
+        Preço: R$ <span id="resPreco">0.00</span><br>
+        Frete: R$ <span id="resFrete">0.00</span>
+        <div class="total">Total: R$ <span id="resTotal">0.00</span></div>
+      </div>
 
-<form id="checkoutForm">
-
-    <!-- Tipo de Entrega -->
-    <label for="tipoEntrega">Forma de Recebimento:</label>
-    <select id="tipoEntrega" required>
-        <option value="entrega">Entrega no Endereço</option>
+      <!-- NOVA OPÇÃO DE ENTREGA OU RETIRADA -->
+      <label style="margin-top:14px;">Forma de recebimento</label>
+      <select id="tipoEntrega" style="width:100%; padding:12px; border-radius:10px; border:1px solid #e6e9ee; font-size:15px;">
+        <option value="entrega">Entrega no endereço</option>
         <option value="retirada">Retirada na Loja</option>
-    </select>
+      </select>
 
-    <!-- Campos de Endereço (só aparecem na entrega) -->
-    <div id="campos-endereco">
-        <label>CEP:</label>
-        <input type="text" id="cep" placeholder="CEP">
+      <form id="checkoutForm" class="mt">
 
-        <label>Rua:</label>
-        <input type="text" id="rua" placeholder="Rua">
+        <label>Nome completo</label>
+        <input type="text" id="nome" name="nome" required>
 
-        <label>Número:</label>
-        <input type="text" id="numero" placeholder="Número">
+        <label>Telefone (Whatsapp)</label>
+        <input type="tel" id="telefone" name="telefone" required>
 
-        <label>Bairro:</label>
-        <input type="text" id="bairro" placeholder="Bairro">
+        <!-- CAMPOS DE ENDEREÇO (somem quando for retirada) -->
+        <div id="areaEndereco">
 
-        <label>Cidade:</label>
-        <input type="text" id="cidade" placeholder="Cidade">
+          <label>CEP</label>
+          <div class="row">
+            <div class="col">
+              <input type="text" id="cep" name="cep" placeholder="00000-000">
+            </div>
+
+            <div class="col">
+              <button type="button" id="btnBuscaCep" class="secondary">Buscar CEP</button>
+            </div>
+          </div>
+
+          <label>Rua / Logradouro</label>
+          <input type="text" id="rua" name="rua">
+
+          <label>Número</label>
+          <input type="text" id="numero" name="numero" placeholder="123">
+
+          <div class="sn-box">
+            <input type="checkbox" id="snCheck" style="width:18px; height:18px; cursor:pointer;">
+            <label for="snCheck" style="margin:0; cursor:pointer;">Sem Número (S/N)</label>
+          </div>
+
+          <label>Bairro</label>
+          <input type="text" id="bairro" name="bairro">
+
+          <label>Cidade</label>
+          <input type="text" id="cidade" name="cidade">
+
+          <div class="note">
+            Apenas entregamos para CEPs específicos. Se o CEP não for aceito, o checkout é bloqueado.
+          </div>
+        </div>
+
+        <button id="btnEnviar" class="primary" type="button" disabled>Enviar pedido</button>
+      </form>
+
+      <div id="msg" class="note" style="display:none;margin-top:10px;"></div>
     </div>
+  </div>
 
-    <button type="submit">Enviar Pedido</button>
+  <script src="checkout.js"></script>
 
-</form>
+  <script>
+    /* ----- OPÇÃO DE ENTREGA OU RETIRADA ----- */
+    const tipoEntrega = document.getElementById("tipoEntrega");
+    const areaEndereco = document.getElementById("areaEndereco");
+    const freteEl = document.getElementById("resFrete");
+    const totalEl = document.getElementById("resTotal");
+    const precoEl = document.getElementById("resPreco");
 
-<script src="checkout.js"></script>
+    function atualizarTotal() {
+      const preco = parseFloat(precoEl.textContent) || 0;
+      const frete = parseFloat(freteEl.textContent) || 0;
+      totalEl.textContent = (preco + frete).toFixed(2);
+    }
+
+    tipoEntrega.addEventListener("change", () => {
+      if (tipoEntrega.value === "retirada") {
+        areaEndereco.classList.add("hidden");
+        freteEl.textContent = "0.00";
+        atualizarTotal();
+      } else {
+        areaEndereco.classList.remove("hidden");
+        freteEl.textContent = "0.00"; // será atualizado pelo CEP
+        atualizarTotal();
+      }
+    });
+
+    /* ----- SEM NÚMERO ----- */
+    const sn = document.getElementById("snCheck");
+    const num = document.getElementById("numero");
+
+    sn.addEventListener("change", () => {
+      if (sn.checked) {
+        num.value = "S/N";
+        num.disabled = true;
+      } else {
+        num.value = "";
+        num.disabled = false;
+      }
+    });
+  </script>
 
 </body>
 </html>
+
