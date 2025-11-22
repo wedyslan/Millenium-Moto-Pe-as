@@ -16,12 +16,12 @@ const FRETES_POR_CEP = {
   "57279000": 0.00
 };
 
-/* EmailJS - substitua pelos seus IDs (não funciona até configurar no emailjs.com) */
+/* EmailJS - substitua pelos seus IDs */
 const EMAILJS_SERVICE = "service_xxx";
 const EMAILJS_TEMPLATE = "template_xxx";
 const EMAILJS_PUBLIC_KEY = "SEU_PUBLIC_KEY_AQUI";
 
-/* inicializa EmailJS (necessário colocar sua public key real) */
+/* inicializa EmailJS */
 if (window.emailjs) {
   try { emailjs.init(EMAILJS_PUBLIC_KEY); } catch(e){ /* ignore */ }
 }
@@ -50,6 +50,9 @@ const inputRua = document.getElementById("rua");
 const inputBairro = document.getElementById("bairro");
 const inputCidade = document.getElementById("cidade");
 
+// IMPORTANTE: novo seletor
+const tipoEntrega = document.getElementById("tipoEntrega");
+
 let produtoSelecionado = { name: "—", price: 0 };
 let freteAtual = 0;
 
@@ -66,13 +69,41 @@ let freteAtual = 0;
   resFrete.textContent = formatMoney(0);
   resTotal.textContent = formatMoney(produtoSelecionado.price);
 
-  // eventos
   btnBuscaCep.addEventListener("click", handleBuscarCep);
   btnEnviar.addEventListener("click", handleEnviarPedido);
+
+  tipoEntrega.addEventListener("change", atualizarRetirada);
 })();
 
-/* ========= função buscar CEP via ViaCEP ========= */
+/* ========= lógica da retirada ========= */
+function atualizarRetirada() {
+  if (tipoEntrega.value === "retirada") {
+    freteAtual = 0;
+    resFrete.textContent = formatMoney(0);
+
+    const total = produtoSelecionado.price + freteAtual;
+    resTotal.textContent = formatMoney(total);
+
+    desbloqueiaCheckout(); 
+    showMessage("Modo retirada selecionado. Endereço não é necessário.", false);
+  } else {
+    freteAtual = 0;
+    resFrete.textContent = formatMoney(0);
+    const total = produtoSelecionado.price + freteAtual;
+    resTotal.textContent = formatMoney(total);
+
+    showMessage("Informe o CEP para calcular o frete.", false);
+    btnEnviar.disabled = true;
+  }
+}
+
+/* ========= buscar CEP via ViaCEP ========= */
 function handleBuscarCep() {
+  if (tipoEntrega.value === "retirada") {
+    showMessage("Retirada selecionada — CEP não é necessário.", false);
+    return;
+  }
+
   const cepRaw = inputCep.value || "";
   const cep = cepRaw.replace(/\D/g,"");
 
@@ -82,6 +113,7 @@ function handleBuscarCep() {
   }
 
   showMessage("Buscando CEP...", false);
+
   fetch(`https://viacep.com.br/ws/${cep}/json/`)
     .then(r => r.json())
     .then(d => {
@@ -103,8 +135,14 @@ function handleBuscarCep() {
     });
 }
 
-/* ========= validação do CEP contra lista permitida ========= */
+/* ========= validação do CEP ========= */
 function validarCepPermitido(cep) {
+  if (tipoEntrega.value === "retirada") {
+    // ignorar completamente validação
+    desbloqueiaCheckout();
+    return;
+  }
+
   if (!(cep in FRETES_POR_CEP)) {
     showMessage("Desculpe — não entregamos nesse CEP.", true);
     bloqueiaCheckout();
@@ -113,6 +151,7 @@ function validarCepPermitido(cep) {
 
   freteAtual = FRETES_POR_CEP[cep];
   resFrete.textContent = formatMoney(freteAtual);
+
   const total = produtoSelecionado.price + freteAtual;
   resTotal.textContent = formatMoney(total);
 
@@ -120,7 +159,7 @@ function validarCepPermitido(cep) {
   showMessage("CEP aceito. Você pode finalizar o pedido.", false);
 }
 
-/* ========= bloqueio / desbloqueio do botão ========= */
+/* ========= bloqueio / desbloqueio ========= */
 function bloqueiaCheckout() {
   btnEnviar.disabled = true;
   msg.style.color = "#c0392b";
@@ -131,7 +170,7 @@ function desbloqueiaCheckout() {
   msg.style.color = "#2d8659";
 }
 
-/* ========= mostrar mensagem de status ========= */
+/* ========= mostrar mensagens ========= */
 function showMessage(text, isError=false) {
   msg.style.display = "block";
   msg.textContent = text;
@@ -140,41 +179,60 @@ function showMessage(text, isError=false) {
 
 /* ========= enviar pedido: WhatsApp + EmailJS ========= */
 function handleEnviarPedido() {
-  // validações simples
   const nome = document.getElementById("nome").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
-  const cep = (document.getElementById("cep").value || "").replace(/\D/g,"");
-  const rua = inputRua.value.trim();
   const numero = document.getElementById("numero").value.trim();
+  const cep = (document.getElementById("cep").value || "").replace(/\D/g,"");
+
+  const rua = inputRua.value.trim();
   const bairro = inputBairro.value.trim();
   const cidade = inputCidade.value.trim();
 
-  if (!nome || !telefone || !cep || !rua || !numero) {
-    showMessage("Preencha todos os campos obrigatórios.", true);
+  /* ======== Validação inteligente ======== */
+  if (!nome || !telefone) {
+    showMessage("Preencha nome e telefone.", true);
     return;
   }
 
-  // monta mensagem
+  // caso ENTREGA → validar endereço
+  if (tipoEntrega.value === "entrega") {
+    if (!cep || !rua || !numero || !bairro || !cidade) {
+      showMessage("Preencha todos os dados de entrega.", true);
+      return;
+    }
+  }
+
+  /* ======== Preparação do texto ======== */
+  let formaRecebimento = 
+    tipoEntrega.value === "retirada" 
+    ? "Retirada na Loja"
+    : "Entrega no endereço";
+
+  let enderecoTexto =
+    tipoEntrega.value === "retirada"
+      ? "Cliente irá retirar na loja."
+      : `${rua}, ${numero} - ${bairro} - ${cidade} (CEP: ${cep})`;
+
   const total = (produtoSelecionado.price + freteAtual).toFixed(2).replace(".", ",");
   const precoStr = produtoSelecionado.price.toFixed(2).replace(".", ",");
   const freteStr = freteAtual.toFixed(2).replace(".", ",");
 
-  const mensagem = 
+  const mensagem =
 `📦 *NOVO PEDIDO*%0A
 *Produto:* ${produtoSelecionado.name}%0A
 *Preço:* R$ ${precoStr}%0A
 *Frete:* R$ ${freteStr}%0A
 *Total:* R$ ${total}%0A
+*Forma de recebimento:* ${formaRecebimento}%0A
 *Nome:* ${nome}%0A
 *Telefone:* ${telefone}%0A
-*CEP:* ${cep}%0A
-*Endereço:* ${rua}, ${numero} - ${bairro} - ${cidade}`;
+*Endereço:* ${enderecoTexto}`;
 
-  // abre WhatsApp (em nova aba)
+  /* ======== WhatsApp ======== */
   const urlWhats = `https://wa.me/${WHATS_NUMBER}?text=${mensagem}`;
   window.open(urlWhats, "_blank");
 
-  // envia email via EmailJS (se configurado)
+  /* ======== EmailJS ======== */
   if (window.emailjs) {
     const templateParams = {
       to_email: EMAIL_TO,
@@ -182,25 +240,21 @@ function handleEnviarPedido() {
       preco: precoStr,
       frete: freteStr,
       total: total,
+      forma: formaRecebimento,
       nome: nome,
       telefone: telefone,
-      cep: cep,
-      endereco: `${rua}, ${numero}`,
-      bairro: bairro,
-      cidade: cidade
+      endereco: enderecoTexto
     };
 
     emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, templateParams)
       .then(() => {
-        showMessage("Pedido enviado por e-mail e WhatsApp. Obrigado!", false);
-      }, (err) => {
-        console.error("EmailJS error:", err);
-        showMessage("Pedido enviado ao WhatsApp. Erro no envio do email.", true);
+        showMessage("Pedido enviado com sucesso!", false);
+      })
+      .catch(err => {
+        console.error(err);
+        showMessage("WhatsApp enviado. Falha no email.", true);
       });
   } else {
-    showMessage("Pedido enviado ao WhatsApp. (Configure EmailJS para envio por email.)", false);
+    showMessage("Pedido enviado ao WhatsApp. (EmailJS não configurado)", false);
   }
-
-  // opcional: limpar campos ou redirecionar
-  // document.getElementById("checkoutForm").reset();
 }
