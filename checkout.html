@@ -52,6 +52,8 @@
       padding-left: 2px;
     }
 
+    .hidden { display:none !important; }
+
     @media(min-width:720px){ .wrap{ padding:28px } }
   </style>
 
@@ -70,51 +72,58 @@
         <div class="total">Total: R$ <span id="resTotal">0.00</span></div>
       </div>
 
+      <!-- NOVA OPÇÃO DE ENTREGA OU RETIRADA -->
+      <label style="margin-top:14px;">Forma de recebimento</label>
+      <select id="tipoEntrega" style="width:100%; padding:12px; border-radius:10px; border:1px solid #e6e9ee; font-size:15px;">
+        <option value="entrega">Entrega no endereço</option>
+        <option value="retirada">Retirada na Loja</option>
+      </select>
+
       <form id="checkoutForm" class="mt">
 
         <label>Nome completo</label>
-        <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+        <input type="text" id="nome" name="nome" required>
 
-        <label>Telefone (whatsapp)</label>
-        <input type="tel" id="telefone" name="telefone" placeholder="(00) 0 0000-0000" required>
+        <label>Telefone (Whatsapp)</label>
+        <input type="tel" id="telefone" name="telefone" required>
 
-        <label>CEP</label>
+        <!-- CAMPOS DE ENDEREÇO (somem quando for retirada) -->
+        <div id="areaEndereco">
 
-        <div class="row">
-          <div class="col">
-            <input type="text" id="cep" name="cep" placeholder="00000-000" required>
+          <label>CEP</label>
+          <div class="row">
+            <div class="col">
+              <input type="text" id="cep" name="cep" placeholder="00000-000">
+            </div>
+
+            <div class="col">
+              <button type="button" id="btnBuscaCep" class="secondary">Buscar CEP</button>
+            </div>
           </div>
 
-          <div class="col">
-            <button type="button" id="btnBuscaCep" class="secondary">Buscar CEP</button>
+          <label>Rua / Logradouro</label>
+          <input type="text" id="rua" name="rua">
+
+          <label>Número</label>
+          <input type="text" id="numero" name="numero" placeholder="123">
+
+          <div class="sn-box">
+            <input type="checkbox" id="snCheck" style="width:18px; height:18px; cursor:pointer;">
+            <label for="snCheck" style="margin:0; cursor:pointer;">Sem Número (S/N)</label>
+          </div>
+
+          <label>Bairro</label>
+          <input type="text" id="bairro" name="bairro">
+
+          <label>Cidade</label>
+          <input type="text" id="cidade" name="cidade">
+
+          <div class="note">
+            Apenas entregamos para CEPs específicos. Se o CEP não for aceito, o checkout é bloqueado.
           </div>
         </div>
 
-        <label>Rua / Logradouro</label>
-        <input type="text" id="rua" name="rua" placeholder="Digite a rua">
-
-        <label>Número</label>
-        <input type="text" id="numero" name="numero" placeholder="123" required>
-
-        <div class="sn-box">
-          <input type="checkbox" id="snCheck" style="width:18px; height:18px; cursor:pointer;">
-          <label for="snCheck" style="margin:0; cursor:pointer;">Sem Número (S/N)</label>
-        </div>
-
-        <label>Bairro</label>
-        <input type="text" id="bairro" name="bairro" placeholder="Digite o bairro">
-
-        <label>Cidade</label>
-        <!-- ✔️ AGORA É LIVRE PARA DIGITAR -->
-        <input type="text" id="cidade" name="cidade" placeholder="Digite a cidade">
-
-        <div class="note">
-          Apenas entregamos para CEPs específicos. Se o CEP não for aceito, o checkout é bloqueado.
-        </div>
-
-        <button id="btnEnviar" class="primary" type="button" disabled>
-          Enviar pedido 
-        </button>
+        <button id="btnEnviar" class="primary" type="button" disabled>Enviar pedido</button>
       </form>
 
       <div id="msg" class="note" style="display:none;margin-top:10px;"></div>
@@ -124,6 +133,32 @@
   <script src="checkout.js"></script>
 
   <script>
+    /* ----- OPÇÃO DE ENTREGA OU RETIRADA ----- */
+    const tipoEntrega = document.getElementById("tipoEntrega");
+    const areaEndereco = document.getElementById("areaEndereco");
+    const freteEl = document.getElementById("resFrete");
+    const totalEl = document.getElementById("resTotal");
+    const precoEl = document.getElementById("resPreco");
+
+    function atualizarTotal() {
+      const preco = parseFloat(precoEl.textContent) || 0;
+      const frete = parseFloat(freteEl.textContent) || 0;
+      totalEl.textContent = (preco + frete).toFixed(2);
+    }
+
+    tipoEntrega.addEventListener("change", () => {
+      if (tipoEntrega.value === "retirada") {
+        areaEndereco.classList.add("hidden");
+        freteEl.textContent = "0.00";
+        atualizarTotal();
+      } else {
+        areaEndereco.classList.remove("hidden");
+        freteEl.textContent = "0.00"; // será atualizado pelo CEP
+        atualizarTotal();
+      }
+    });
+
+    /* ----- SEM NÚMERO ----- */
     const sn = document.getElementById("snCheck");
     const num = document.getElementById("numero");
 
